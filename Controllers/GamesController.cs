@@ -190,10 +190,32 @@ namespace Mundial.Controllers
                     }
                 }
                 List<GameCountry> gamecountry = _context.GameCountry.Where(i => i.GameId == game.Id).ToList();
+                List<Bettings> betts = _context.Bettings.Where(i => i.GameId == game.Id).ToList();
                 int? countryId1 = gamecountry[0].CountryId;
                 int? countryId2 = gamecountry[1].CountryId;
                 Country team1 = _context.Countries.FirstOrDefault(i => i.Id == countryId1);
                 Country team2 = _context.Countries.FirstOrDefault(i => i.Id == countryId2);
+                foreach (var bet in betts)
+                {
+                    if (bet.ScoreTeam1 == game.ScoreCountry1 && bet.ScoreTeam2 == game.ScoreCountry2)
+                    {
+                        bet.BetPoints += 3;
+                    }
+                    else if (game.ScoreCountry1 == game.ScoreCountry2 && bet.ScoreTeam1 == bet.ScoreTeam2)
+                    {
+                        bet.BetPoints += 1;
+                    }
+                    else if (game.ScoreCountry1 > game.ScoreCountry2 && bet.ScoreTeam1 > bet.ScoreTeam2)
+                    {
+                        bet.BetPoints += 1;
+                    }
+                    else if (game.ScoreCountry1 < game.ScoreCountry2 && bet.ScoreTeam1 < bet.ScoreTeam2)
+                    {
+                        bet.BetPoints += 1;
+                    }
+                    _context.Update(bet);
+
+                }
                 if (game.ScoreCountry1 > game.ScoreCountry2)
                 {
                     team1.Points += 3;
@@ -239,6 +261,7 @@ namespace Mundial.Controllers
                 }
 
 
+
             }
             return View(game);
         }
@@ -278,42 +301,66 @@ namespace Mundial.Controllers
                 int? countryId2 = gameCountry[1].CountryId;
                 Country team1 = _context.Countries.FirstOrDefault(i => i.Id == countryId1);
                 Country team2 = _context.Countries.FirstOrDefault(i => i.Id == countryId2);
+                List<Bettings> betts = _context.Bettings.Where(i => i.GameId == game.Id).ToList();
+
                 if (game.IsEditable == false)
                 {
-                if (game.ScoreCountry1 > game.ScoreCountry2)
-                {
-                    team1.Points -= 3;
-                    team1.GoalLost -= game.ScoreCountry2;
-                    team1.GoalScored -= game.ScoreCountry1;
-                    team2.GoalLost -= game.ScoreCountry1;
-                    team2.GoalScored -= game.ScoreCountry2;
-                    _context.Update(team1);
-                    _context.Update(team2);
+                    foreach (var bet in betts)
+                    {
+                        if (bet.ScoreTeam1 == game.ScoreCountry1 && bet.ScoreTeam2 == game.ScoreCountry2)
+                        {
+                            bet.BetPoints -= 3;
+                        }
+                        else if (game.ScoreCountry1 == game.ScoreCountry2 && bet.ScoreTeam1 == bet.ScoreTeam2)
+                        {
+                            bet.BetPoints -= 1;
+                        }
+                        else if (game.ScoreCountry1 > game.ScoreCountry2 && bet.ScoreTeam1 > bet.ScoreTeam2)
+                        {
+                            bet.BetPoints -= 1;
+                        }
+                        else if (game.ScoreCountry1 < game.ScoreCountry2 && bet.ScoreTeam1 < bet.ScoreTeam2)
+                        {
+                            bet.BetPoints -= 1;
+                        }
+                        _context.Remove(bet);
 
-                }
-                else if (game.ScoreCountry1 < game.ScoreCountry2)
-                {
-                    team2.Points -= 3;
-                    team2.GoalLost -= game.ScoreCountry1;
-                    team2.GoalScored -= game.ScoreCountry2;
-                    team1.GoalLost -= game.ScoreCountry2;
-                    team1.GoalScored -= game.ScoreCountry1;
-                    _context.Update(team1);
-                    _context.Update(team2);
+                    }
 
-                }
-                else
-                {
-                    team2.Points -= 1;
-                    team1.Points -= 1;
-                    team2.GoalLost -= game.ScoreCountry1;
-                    team2.GoalScored -= game.ScoreCountry2;
-                    team1.GoalLost -= game.ScoreCountry2;
-                    team1.GoalScored -= game.ScoreCountry1;
-                    _context.Update(team1);
-                    _context.Update(team2);
+                    if (game.ScoreCountry1 > game.ScoreCountry2)
+                    {
+                        team1.Points -= 3;
+                        team1.GoalLost -= game.ScoreCountry2;
+                        team1.GoalScored -= game.ScoreCountry1;
+                        team2.GoalLost -= game.ScoreCountry1;
+                        team2.GoalScored -= game.ScoreCountry2;
+                        _context.Update(team1);
+                        _context.Update(team2);
 
-                }
+                    }
+                    else if (game.ScoreCountry1 < game.ScoreCountry2)
+                    {
+                        team2.Points -= 3;
+                        team2.GoalLost -= game.ScoreCountry1;
+                        team2.GoalScored -= game.ScoreCountry2;
+                        team1.GoalLost -= game.ScoreCountry2;
+                        team1.GoalScored -= game.ScoreCountry1;
+                        _context.Update(team1);
+                        _context.Update(team2);
+
+                    }
+                    else
+                    {
+                        team2.Points -= 1;
+                        team1.Points -= 1;
+                        team2.GoalLost -= game.ScoreCountry1;
+                        team2.GoalScored -= game.ScoreCountry2;
+                        team1.GoalLost -= game.ScoreCountry2;
+                        team1.GoalScored -= game.ScoreCountry1;
+                        _context.Update(team1);
+                        _context.Update(team2);
+
+                    }
                 }
                 foreach (var country in gameCountry)
                 {

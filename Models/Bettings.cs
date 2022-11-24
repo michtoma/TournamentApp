@@ -10,6 +10,7 @@
         public int GameId { get; set; }
         public int ScoreTeam1 { get; set; } = 0;
         public int ScoreTeam2 { get; set; } = 0;
+        public int BetPoints { get; set;} =0;
         
     }
 }

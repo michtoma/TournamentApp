@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Index";
+    var i = 0;
 }
 
 <h1>Ranking</h1>
@@ -11,7 +12,10 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.UserName)
+                Miejsce
+            </th>
+            <th>
+                Gracz
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Points)
@@ -19,15 +23,20 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.OrderByDescending(u=>u.Points)) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.UserName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Points)
-            </td>
-        </tr>
-}
+        @foreach (var item in Model.OrderByDescending(u => u.Points))
+        {
+            i ++;
+            <tr>
+                <td>
+                    @i
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UserName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Points)
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

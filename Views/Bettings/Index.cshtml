@@ -25,6 +25,9 @@
                 Obstawiony wynik
             </th>
             <th>
+                Uzyskane punkty
+            </th>
+            <th>
                 Działanie
             </th>
         </tr>
@@ -59,7 +62,7 @@
                         {
                             var score1 = score.ScoreTeam1;
                             var score2 = score.ScoreTeam2;
-                            <td>@score1 : @score2</td>
+                            <td>@score1 - @score2</td>
 
                         }
                     }
@@ -68,9 +71,25 @@
                 {
                     <td>nie obstawiono</td>
                 }
+                @if (Model.Betts.Where(b=>b.GameId==item.Id).Any())
+                {
+                    @foreach(var points in Model.Betts)
+                    {
+                        if(points.GameId == item.Id)
+                        {
+                            var point = points.BetPoints;
+                            <td>@point</td>
+
+                        }
+                    }
+                }
+                else
+                {
+                    <td>0</td>
+                }
                 @if (item.DateTime < DateTime.Now)
                 {
-                    <td>Nie można obstawić/edytować wyniku, mecz rozpoczął się: @item.DateTime</td>    
+                    <td>mecz rozpoczął się: @item.DateTime</td>    
                 }
                 else
                 {

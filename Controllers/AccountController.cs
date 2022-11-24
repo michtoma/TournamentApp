@@ -28,8 +28,17 @@ namespace Mundial.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.AppUsers;
-            return View(await applicationDbContext.ToListAsync());
+            var applicationDbContext = _context.AppUsers.ToList();
+            var betts = _context.Bettings.ToList();
+            foreach(var user in applicationDbContext)
+            {
+                foreach(var bet in betts.Where(b => b.UserID == user.Id))
+                {
+                    user.Points += bet.BetPoints;
+                }
+            }
+
+            return View(applicationDbContext);
         }
         public IActionResult Login(string? returnUrl = null)
         {

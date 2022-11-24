@@ -63,8 +63,11 @@
                 @if(item.IsEditable==true){
                 <a asp-action="Save" asp-route-id="@item.Id" class="btn btn-outline-danger">Wpisz końcowy wynik meczu</a>
                 }
-               
-                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
+                    @if (User.IsInRole("Admin"))
+                    {
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
+                        
+                    }
             </td>
         </tr>
 }
