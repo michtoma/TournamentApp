@@ -1,0 +1,96 @@
+﻿@model IEnumerable<Mundial.Models.Grupa>
+
+@{
+    ViewData["Title"] = "Grupy";
+}
+
+<h1>Grupy</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Create New</a>
+</p>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>Tabele</th>
+            @if (User.IsInRole("Admin")){
+
+            <th>Akcje</th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+
+                </td>
+                <td>
+                    <table class="table table-bordered table-striped table-hover">
+                        <thead>
+
+                            <tr>
+                                <th>
+                                    Kraj
+                                </th>
+                                <th>
+                                    Punkty
+                                </th>
+                                <th>
+                                    Bramki zdobyte
+                                </th>
+                                <th>
+                                    Bramki stracone
+                                </th>
+                                <th>
+                                    Bilans bramek
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var cont in item.Country.OrderByDescending(x => x.GoalDif).OrderByDescending(x => x.Points))
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(item => cont.Name)
+
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(item => cont.Points)
+
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(item => cont.GoalScored)
+
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(item => cont.GoalLost)
+
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(item => cont.GoalDif)
+
+                                    </td>
+
+                                </tr>
+
+                            }
+                        </tbody>
+                    </table>
+
+                </td>
+                @if(User.IsInRole("Admin")){
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>

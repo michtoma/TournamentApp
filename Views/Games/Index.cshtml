@@ -1,0 +1,72 @@
+﻿@model IEnumerable<Mundial.Models.Game>
+
+@{
+    ViewData["Title"] = "Terminarz";
+}
+
+<h1>Terminarz i wyniki</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-dark">Dodaj mecz</a>
+</p>
+<table id="myTablePrint" class="table table-bordered table-striped table-hover">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.DateTime)
+            </th>
+            <th>
+                Kraj 
+            </th>
+            <th>
+                grupa
+            </th>
+            <th>
+                Kraj
+            </th>
+            <th>
+                grupa
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ScoreCountry1)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ScoreCountry2)
+            </th>
+            <th>
+                Action
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateTime)
+            </td>
+            @foreach(var cont in item.gameCountries){
+            <td>
+                @Html.DisplayFor(modelItem => cont.Country.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => cont.Country.Grupa.Name)
+            </td>
+
+            }
+            <td>
+                @Html.DisplayFor(modelItem => item.ScoreCountry1)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ScoreCountry2)
+            </td>
+            <td>
+                @if(item.IsEditable==true){
+                <a asp-action="Save" asp-route-id="@item.Id" class="btn btn-outline-danger">Wpisz końcowy wynik meczu</a>
+                }
+               
+                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

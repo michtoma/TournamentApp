@@ -1,0 +1,85 @@
+﻿@model BettingsViewModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table id="myTablePrint" class="table table-bordered table-striped table-hover">
+    <thead>
+        <tr>
+            <th>
+                Data
+            </th>
+            <th>
+                Kraj
+            </th>
+            <th>
+                Wynik
+            </th>
+            <th>
+                Obstawiony wynik
+            </th>
+            <th>
+                Działanie
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Games)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateTime)
+                </td>
+                <td>
+
+                @foreach (var cont in item.gameCountries)
+                {
+                   
+                        @Html.DisplayFor(modelItem => cont.Country.Name) <a> </a> 
+                   
+
+                }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ScoreCountry1) - 
+                
+                    @Html.DisplayFor(modelItem => item.ScoreCountry2)
+                </td>
+                @if (Model.Betts.Where(b=>b.GameId==item.Id).Any())
+                {
+                    @foreach(var score in Model.Betts)
+                    {
+                        if(score.GameId == item.Id)
+                        {
+                            var score1 = score.ScoreTeam1;
+                            var score2 = score.ScoreTeam2;
+                            <td>@score1 : @score2</td>
+
+                        }
+                    }
+                }
+                else
+                {
+                    <td>nie obstawiono</td>
+                }
+                @if (item.DateTime < DateTime.Now)
+                {
+                    <td>Nie można obstawić/edytować wyniku, mecz rozpoczął się: @item.DateTime</td>    
+                }
+                else
+                {
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary">Typuj wynik</a>
+                </td>
+                    
+                }
+            </tr>
+        }
+    </tbody>
+</table>
