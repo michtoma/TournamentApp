@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -8,7 +9,7 @@ using Mundial.ViewModels;
 
 namespace Mundial.Controllers
 {
-
+ 
     public class AccountController : Controller
     {
         private readonly UserManager<AppUsers> _userManager;
@@ -26,6 +27,7 @@ namespace Mundial.Controllers
             // _roleManager = roleManager;
             _context = context;
         }
+        [Authorize]
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.AppUsers.ToList();
@@ -69,6 +71,7 @@ namespace Mundial.Controllers
             }
             return View(loginViewModel);
         }
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> LogOff()

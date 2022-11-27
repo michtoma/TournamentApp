@@ -14,5 +14,7 @@ namespace Mundial.ViewModels
         public IEnumerable<SelectListItem>? GamesSelected { get; set; }
         public List<Bettings> Betts { get; set; } = new List<Bettings>();
         public IEnumerable<SelectListItem>? BettsSelected { get; set; }
+        public int? bettID { get; set; }
     }
 }
+

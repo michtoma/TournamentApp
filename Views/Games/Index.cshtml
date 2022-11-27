@@ -16,7 +16,7 @@
                 @Html.DisplayNameFor(model => model.DateTime)
             </th>
             <th>
-                Kraj 
+                Kraj
             </th>
             <th>
                 grupa
@@ -28,48 +28,48 @@
                 grupa
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ScoreCountry1)
+                Wynik
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ScoreCountry2)
-            </th>
-            <th>
-                Action
-            </th>
+            @if (User.IsInRole("Admin"))
+            {
+                <th>
+                    Action
+                </th>
+            }
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateTime)
-            </td>
-            @foreach(var cont in item.gameCountries){
-            <td>
-                @Html.DisplayFor(modelItem => cont.Country.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => cont.Country.Grupa.Name)
-            </td>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateTime)
+                </td>
+                @foreach (var cont in item.gameCountries)
+                {
+                    <td>
+                        @Html.DisplayFor(modelItem => cont.Country.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => cont.Country.Grupa.Name)
+                    </td>
 
-            }
-            <td>
-                @Html.DisplayFor(modelItem => item.ScoreCountry1)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ScoreCountry2)
-            </td>
-            <td>
-                @if(item.IsEditable==true){
-                <a asp-action="Save" asp-route-id="@item.Id" class="btn btn-outline-danger">Wpisz końcowy wynik meczu</a>
                 }
-                    @if (User.IsInRole("Admin"))
-                    {
-                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
-                        
-                    }
-            </td>
-        </tr>
-}
+                <td>
+                    @Html.DisplayFor(modelItem => item.ScoreCountry1) - @Html.DisplayFor(modelItem => item.ScoreCountry2)
+                </td>
+                @if (User.IsInRole("Admin"))
+                {
+                    <td>
+                        @if (item.IsEditable == true)
+                        {
+                            <a asp-action="Save" asp-route-id="@item.Id" class="btn btn-outline-danger">Wpisz końcowy wynik meczu</a>
+                        }
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
+
+                    </td>
+                }
+            </tr>
+        }
     </tbody>
 </table>

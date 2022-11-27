@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -12,6 +13,7 @@ using Mundial.ViewModels;
 
 namespace Mundial.Controllers
 {
+    [Authorize]
     public class BettingsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -61,7 +63,7 @@ namespace Mundial.Controllers
         }
 
         // GET: Bettings/Create
-        public IActionResult Create()
+        public IActionResult Create(int gameId)
         {
             string userID = _userManager.GetUserId(User);
             var games = _context.Game.Include(g => g.gameCountries).ThenInclude(g => g.Country).ToList();
@@ -69,26 +71,53 @@ namespace Mundial.Controllers
             viewModel.UserId = userID;
             viewModel.Games = games;
             var tekst = "";
-            List<SelectListItem> selectList = new List<SelectListItem>();
-            foreach (var game in games)
+            if (gameId == 0)
             {
-                if (game.gameCountries != null)
+                List<SelectListItem> selectList = new List<SelectListItem>();
+                foreach (var game in games)
                 {
-                    tekst = game.DateTime.ToString() + " ";
-                    foreach (var country in game.gameCountries)
+                    if (game.gameCountries != null)
                     {
-                        tekst += country.Country.Name + " ";
-                    }
+                        tekst = game.DateTime.ToString() + " ";
+                        foreach (var country in game.gameCountries)
+                        {
+                            tekst += country.Country.Name + " ";
+                        }
 
+                    }
+                    selectList.Add(new SelectListItem()
+                    {
+                        Value = game.Id.ToString(),
+                        Text = tekst
+                    });
                 }
-                selectList.Add(new SelectListItem()
-                {
-                    Value = game.Id.ToString(),
-                    Text = tekst
-                });
+
+                viewModel.GamesSelected = selectList;
             }
-            viewModel.GamesSelected = selectList;
-            return View(viewModel);
+            else
+            {
+                viewModel.GameId = gameId;
+                List<SelectListItem> selectList = new List<SelectListItem>();
+                foreach (var game in games.Where(g => g.Id == gameId))
+                {
+                    if (game.gameCountries != null)
+                    {
+                        tekst = game.DateTime.ToString() + " ";
+                        foreach (var country in game.gameCountries)
+                        {
+                            tekst += country.Country.Name + " ";
+                        }
+
+                    }
+                    selectList.Add(new SelectListItem()
+                    {
+                        Value = game.Id.ToString(),
+                        Text = tekst
+                    });
+                    viewModel.GamesSelected = selectList;
+                }
+            }
+                return View(viewModel);
         }
 
         // POST: Bettings/Create
@@ -123,13 +152,11 @@ namespace Mundial.Controllers
                 return NotFound();
             }
 
-            var bettings = await _context.Bettings.FindAsync(id);
+            var bettings = _context.Bettings.FirstOrDefault(b=>b.GameId==id);
             if (bettings == null)
             {
                 return NotFound();
             }
-            ViewData["GameId"] = new SelectList(_context.Game, "Id", "Id", bettings.GameId);
-            ViewData["UserID"] = new SelectList(_context.AppUsers, "Id", "Id", bettings.UserID);
             return View(bettings);
         }
 
@@ -140,21 +167,20 @@ namespace Mundial.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,UserID,GameId,ScoreTeam1,ScoreTeam2")] Bettings bettings)
         {
-            if (id != bettings.Id)
-            {
-                return NotFound();
-            }
+            var betts = _context.Bettings.FirstOrDefault(b => b.GameId == id);
+            betts.ScoreTeam1= bettings.ScoreTeam1;
+            betts.ScoreTeam2= bettings.ScoreTeam2;
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(bettings);
+                    _context.Update(betts);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!BettingsExists(bettings.Id))
+                    if (!BettingsExists(betts.Id))
                     {
                         return NotFound();
                     }
