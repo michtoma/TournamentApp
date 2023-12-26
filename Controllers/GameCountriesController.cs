@@ -21,14 +21,12 @@ namespace Mundial.Controllers
             _context = context;
         }
 
-        // GET: GameCountries
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.GameCountry.Include(g => g.Country).Include(g => g.Game);
             return View(await applicationDbContext.ToListAsync());
         }
 
-        // GET: GameCountries/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.GameCountry == null)
@@ -48,17 +46,12 @@ namespace Mundial.Controllers
             return View(gameCountry);
         }
 
-        // GET: GameCountries/Create
         public IActionResult Create()
         {
             ViewData["CountryId"] = new SelectList(_context.Countries, "Id", "Name");
             ViewData["GameId"] = new SelectList(_context.Game, "Id", "Id");
             return View();
         }
-
-        // POST: GameCountries/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,CountryId,GameId")] GameCountry gameCountry)
@@ -74,7 +67,6 @@ namespace Mundial.Controllers
             return View(gameCountry);
         }
 
-        // GET: GameCountries/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.GameCountry == null)
@@ -92,9 +84,6 @@ namespace Mundial.Controllers
             return View(gameCountry);
         }
 
-        // POST: GameCountries/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,CountryId,GameId")] GameCountry gameCountry)
@@ -128,8 +117,6 @@ namespace Mundial.Controllers
             ViewData["GameId"] = new SelectList(_context.Game, "Id", "Id", gameCountry.GameId);
             return View(gameCountry);
         }
-
-        // GET: GameCountries/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.GameCountry == null)
@@ -149,7 +136,6 @@ namespace Mundial.Controllers
             return View(gameCountry);
         }
 
-        // POST: GameCountries/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

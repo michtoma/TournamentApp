@@ -22,14 +22,12 @@ namespace Mundial.Controllers
             _context = context;
         }
 
-        // GET: Games
         public async Task<IActionResult> Index()
         {
 
             return View(await _context.Game.Include(c => c.gameCountries).ThenInclude(g => g.Country).ThenInclude(g => g.Grupa).ToListAsync());
         }
 
-        // GET: Games/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Game == null)
@@ -47,7 +45,6 @@ namespace Mundial.Controllers
             return View(game);
         }
 
-        // GET: Games/Create
         public IActionResult Create()
         {
             List<Country> countries = _context.Countries.ToList();
@@ -67,9 +64,6 @@ namespace Mundial.Controllers
             return View(gameViewModel);
         }
 
-        // POST: Games/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(GameViewModel gameVM)
@@ -97,7 +91,6 @@ namespace Mundial.Controllers
             return View(gameVM);
         }
 
-        // GET: Games/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Game == null)
@@ -126,9 +119,6 @@ namespace Mundial.Controllers
             return View(game);
         }
 
-        // POST: Games/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,DateTime,ScoreCountry1,ScoreCountry2")] Game game)
@@ -268,7 +258,6 @@ namespace Mundial.Controllers
             return View(game);
         }
 
-        // GET: Games/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Game == null)
@@ -286,7 +275,6 @@ namespace Mundial.Controllers
             return View(game);
         }
 
-        // POST: Games/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

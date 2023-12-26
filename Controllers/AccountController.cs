@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using Mundial.Data;
 using Mundial.Models;
 using Mundial.ViewModels;
@@ -13,18 +11,15 @@ namespace Mundial.Controllers
     public class AccountController : Controller
     {
         private readonly UserManager<AppUsers> _userManager;
-        //private readonly RoleManager<IdentityRole> _roleManager;
         private readonly SignInManager<AppUsers> _signInManager;
         private readonly ApplicationDbContext _context;
 
         public AccountController(UserManager<AppUsers> userManager,
            SignInManager<AppUsers> signInManager,
-            //RoleManager<IdentityRole> roleManager,
             ApplicationDbContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
-            // _roleManager = roleManager;
             _context = context;
         }
         [Authorize]

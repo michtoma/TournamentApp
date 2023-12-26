@@ -25,7 +25,6 @@ namespace Mundial.Controllers
             _userManager = userManager;
         }
 
-        // GET: Bettings
         public async Task<IActionResult> Index()
         {
             List<Game> games = _context.Game
@@ -42,7 +41,6 @@ namespace Mundial.Controllers
             return View(viewModel);
         }
 
-        // GET: Bettings/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Bettings == null)
@@ -62,7 +60,6 @@ namespace Mundial.Controllers
             return View(bettings);
         }
 
-        // GET: Bettings/Create
         public IActionResult Create(int gameId)
         {
             string userID = _userManager.GetUserId(User);
@@ -117,26 +114,22 @@ namespace Mundial.Controllers
                     viewModel.GamesSelected = selectList;
                 }
             }
-                return View(viewModel);
+            return View(viewModel);
         }
-
-        // POST: Bettings/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create( BettingsViewModel bettings)
+        public async Task<IActionResult> Create(BettingsViewModel bettings)
         {
             if (ModelState.IsValid)
             {
                 string userID = _userManager.GetUserId(User);
                 Bettings bett = new Bettings();
-                bett.GameId=bettings.GameId;
+                bett.GameId = bettings.GameId;
                 bett.UserID = userID;
                 bett.ScoreTeam1 = bettings.ScoreTeam1;
                 bett.ScoreTeam2 = bettings.ScoreTeam2;
-                
-                
+
+
                 _context.Add(bett);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -144,7 +137,6 @@ namespace Mundial.Controllers
             return View(bettings);
         }
 
-        // GET: Bettings/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Bettings == null)
@@ -152,7 +144,7 @@ namespace Mundial.Controllers
                 return NotFound();
             }
 
-            var bettings = _context.Bettings.FirstOrDefault(b=>b.GameId==id);
+            var bettings = _context.Bettings.FirstOrDefault(b => b.GameId == id);
             if (bettings == null)
             {
                 return NotFound();
@@ -160,16 +152,13 @@ namespace Mundial.Controllers
             return View(bettings);
         }
 
-        // POST: Bettings/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,UserID,GameId,ScoreTeam1,ScoreTeam2")] Bettings bettings)
         {
             var betts = _context.Bettings.FirstOrDefault(b => b.GameId == id);
-            betts.ScoreTeam1= bettings.ScoreTeam1;
-            betts.ScoreTeam2= bettings.ScoreTeam2;
+            betts.ScoreTeam1 = bettings.ScoreTeam1;
+            betts.ScoreTeam2 = bettings.ScoreTeam2;
 
             if (ModelState.IsValid)
             {
