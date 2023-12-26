@@ -7,7 +7,7 @@ namespace Mundial.Models
     {
         public int Id { get; set; }
         [Display(Name = "Data i Godzina")]
-        public DateTime DateTime { get; set; } = new DateTime(2016, 06, 01);
+        public DateTime DateTime { get; set; } = DateTime.Now;
         [Display(Name = "Kraje")]
         public ICollection<GameCountry>? gameCountries { get; set; }
         [Display(Name = "Wynik 1")]

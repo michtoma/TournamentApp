@@ -34,32 +34,39 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Grupa.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Points)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.GoalScored)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.GoalLost)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.GoalDif)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-light">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-secondary">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Grupa.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Points)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.GoalScored)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.GoalLost)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.GoalDif)
+                </td>
+                <td>
+                    @if (User.IsInRole("Admin"))
+                    {
+
+
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-light">Edit</a>
+
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
+                    }
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-secondary">Details</a> 
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

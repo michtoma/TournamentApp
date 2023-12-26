@@ -5,10 +5,13 @@
 }
 
 <h1>Index</h1>
+@if (User.IsInRole("Admin"))
+{
+    <p>
+        <a asp-action="Create" class="btn btn-primary">Create New</a>
+    </p>
 
-<p>
-    <a asp-action="Create" class="btn btn-primary">Create New</a>
-</p>
+}
 <table id="myTablePrint" class="table table-bordered table-striped table-hover">
     <thead>
         <tr>
@@ -41,24 +44,34 @@
                 </td>
                 <td>
 
-                @foreach (var cont in item.gameCountries)
-                {
-                   
-                        @Html.DisplayFor(modelItem => cont.Country.Name) <a> </a> 
-                   
+                    @foreach (var cont in item.gameCountries)
+                    {
+
+                        @Html.DisplayFor(modelItem => cont.Country.Name) <a> </a>
+
+
+                    }
+                </td>
+                @if (item.IsEditable)
+                {<td>
+                    Nie ustalono
+                </td>
 
                 }
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ScoreCountry1) - 
-                
-                    @Html.DisplayFor(modelItem => item.ScoreCountry2)
-                </td>
-                @if (Model.Betts.Where(b=>b.GameId==item.Id).Any())
+                else
                 {
-                    @foreach(var score in Model.Betts)
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ScoreCountry1) -
+
+                        @Html.DisplayFor(modelItem => item.ScoreCountry2)
+                    </td>
+                }
+                @if (Model.Betts.Where(b => b.GameId == item.Id).Any())
+                {
+                    @foreach (var score in Model.Betts)
                     {
-                        if(score.GameId == item.Id)
+                        if (score.GameId == item.Id)
                         {
                             var score1 = score.ScoreTeam1;
                             var score2 = score.ScoreTeam2;
@@ -71,11 +84,11 @@
                 {
                     <td>nie obstawiono</td>
                 }
-                @if (Model.Betts.Where(b=>b.GameId==item.Id).Any())
+                @if (Model.Betts.Where(b => b.GameId == item.Id).Any())
                 {
-                    @foreach(var points in Model.Betts)
+                    @foreach (var points in Model.Betts)
                     {
-                        if(points.GameId == item.Id)
+                        if (points.GameId == item.Id)
                         {
                             var point = points.BetPoints;
                             <td>@point</td>
@@ -93,7 +106,7 @@
                 }
                 else
                 {
-                    if (Model.Betts.Where(g=>g.GameId==item.Id).Any())
+                    if (Model.Betts.Where(g => g.GameId == item.Id).Any())
                     {
                         <td>
                             <a asp-action="Edit" asp-route-Id="@item.Id" class="btn btn-primary">Edytuj obstawiony wynik</a>
@@ -105,7 +118,7 @@
                         <td>
                             <a asp-action="Create" asp-route-gameId="@item.Id" class="btn btn-primary">Typuj wynik</a>
                         </td>
-                        
+
                     }
                 }
             </tr>
