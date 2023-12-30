@@ -143,33 +143,34 @@ namespace Mundial.Controllers
             {
                 return NotFound();
             }
-
-            var bettings = _context.Bettings.FirstOrDefault(b => b.GameId == id);
-            if (bettings == null)
+            var user = await _userManager.GetUserAsync(User);
+            var bett = _context.Bettings.Where(b=> b.UserID==user.Id).FirstOrDefault(b => b.GameId == id);
+            if (bett == null)
             {
                 return NotFound();
             }
-            return View(bettings);
+            return View(bett);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,UserID,GameId,ScoreTeam1,ScoreTeam2")] Bettings bettings)
         {
-            var betts = _context.Bettings.FirstOrDefault(b => b.GameId == id);
-            betts.ScoreTeam1 = bettings.ScoreTeam1;
-            betts.ScoreTeam2 = bettings.ScoreTeam2;
+            var user = await _userManager.GetUserAsync(User);
+            var bett = _context.Bettings.Where(b => b.UserID == user.Id).FirstOrDefault(b => b.GameId == id);
+            bett.ScoreTeam1 = bettings.ScoreTeam1;
+            bett.ScoreTeam2 = bettings.ScoreTeam2;
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(betts);
+                    _context.Update(bett);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!BettingsExists(betts.Id))
+                    if (!BettingsExists(bett.Id))
                     {
                         return NotFound();
                     }

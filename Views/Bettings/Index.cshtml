@@ -108,6 +108,7 @@
                 {
                     if (Model.Betts.Where(g => g.GameId == item.Id).Any())
                     {
+
                         <td>
                             <a asp-action="Edit" asp-route-Id="@item.Id" class="btn btn-primary">Edytuj obstawiony wynik</a>
                         </td>
